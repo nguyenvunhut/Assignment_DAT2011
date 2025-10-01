@@ -8,6 +8,25 @@
 # 7. Sắp xếp nhân viên theo họ và tên
 # 8. Xắp xếp nhân viên theo thu nhập
 # 9. Xuất 5 nhân viên có thu nhập cao nhất
+TASK = {
+    1: "Nhập danh sách nhân viên",
+    2: "Xuất danh sách nhân viên", 
+    3: "Tìm nhân viên theo mã",
+    4: "Xóa nhân viên theo mã",
+    5: "Cập nhật thông tin nhân viên",
+    6: "Tìm nhân viên theo khoảng lương",
+    7: "Sắp xếp nhân viên theo họ tên",
+    8: "Sắp xếp nhân viên theo thu nhập",
+    9: "Xuất 5 nhân viên có thu nhập cao nhất"
+}
+
+def safe_input_int(prompt) -> int:
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("Giá trị nhập vào phải là một số nguyên, vui lòng nhập lại!")
+
 def nhap_nhan_vien():
     print("Chức năng: Nhập danh sách nhân viên")
 
@@ -35,42 +54,28 @@ def sap_xep_theo_thu_nhap():
 def top5_thu_nhap():
     print("Chức năng: Xuất 5 nhân viên có thu nhập cao nhất")
 
+def print_menu():
+    print("\n=== QUẢN LÝ NHÂN SỰ TIỀN LƯƠNG ===")
+    for key, describe in TASK.items():
+        print(f"{key}. {describe}")
+    print("0. Thoát")
 
-def menu():
-    while True:
-        print("\n=== QUẢN LÝ NHÂN SỰ TIỀN LƯƠNG ===")
-        print("1. Nhập danh sách nhân viên")
-        print("2. Xuất danh sách nhân viên")
-        print("3. Tìm nhân viên theo mã")
-        print("4. Xóa nhân viên theo mã")
-        print("5. Cập nhật thông tin nhân viên")
-        print("6. Tìm nhân viên theo khoảng lương")
-        print("7. Sắp xếp nhân viên theo họ tên")
-        print("8. Sắp xếp nhân viên theo thu nhập")
-        print("9. Xuất 5 nhân viên có thu nhập cao nhất")
-        print("0. Thoát")
-        
-        try:
-            chon = int(input("Chọn chức năng: "))
-        except ValueError:
-            print("Vui lòng nhập số hợp lệ!")
-            continue
 
-        match chon:
-            case 1: nhap_nhan_vien()
-            case 2: xuat_danh_sach()
-            case 3: tim_theo_ma()
-            case 4: xoa_theo_ma()
-            case 5: cap_nhat_thong_tin()
-            case 6: tim_theo_luong()
-            case 7: sap_xep_theo_ten()
-            case 8: sap_xep_theo_thu_nhap()
-            case 9: top5_thu_nhap()
-            case 0:
-                print("Thoát chương trình.")
-                break
-            case _: print("Chọn sai, vui lòng nhập lại.")
-
-if __name__ == "__main__":
-    menu()
+while True:
+    print_menu()
+    choose = safe_input_int("Chọn chức năng: ")
+    match choose:
+        case 1: nhap_nhan_vien()
+        case 2: xuat_danh_sach()
+        case 3: tim_theo_ma()
+        case 4: xoa_theo_ma()
+        case 5: cap_nhat_thong_tin()
+        case 6: tim_theo_luong()
+        case 7: sap_xep_theo_ten()
+        case 8: sap_xep_theo_thu_nhap()
+        case 9: top5_thu_nhap()
+        case 0:
+            print("Thoát chương trình.")
+            break
+        case _: print("Chức năng không tồn tại, vui lòng nhập lại.")
 
