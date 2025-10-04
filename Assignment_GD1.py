@@ -75,7 +75,7 @@ while True:
         case 8: sap_xep_theo_thu_nhap()
         case 9: top5_thu_nhap()
         case 0:
-            print("Thoát chương trình.")
+            print("Thank you!")
             break
         case _: print("Chức năng không tồn tại, vui lòng nhập lại.")
 
