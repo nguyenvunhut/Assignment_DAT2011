@@ -59,23 +59,3 @@ def print_menu():
     for key, describe in TASK.items():
         print(f"{key}. {describe}")
     print("0. Thoát")
-
-
-while True:
-    print_menu()
-    choose = safe_input_int("Chọn chức năng: ")
-    match choose:
-        case 1: nhap_nhan_vien()
-        case 2: xuat_danh_sach()
-        case 3: tim_theo_ma()
-        case 4: xoa_theo_ma()
-        case 5: cap_nhat_thong_tin()
-        case 6: tim_theo_luong()
-        case 7: sap_xep_theo_ten()
-        case 8: sap_xep_theo_thu_nhap()
-        case 9: top5_thu_nhap()
-        case 0:
-            print("Thank you!")
-            break
-        case _: print("Chức năng không tồn tại, vui lòng nhập lại.")
-
