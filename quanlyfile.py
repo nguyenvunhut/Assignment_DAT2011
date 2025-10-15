@@ -37,6 +37,7 @@ class QuanLyTxt(FileHandler):
         danh_sach = []
 
         if not os.path.exists(file_path): # kiểm tra file tồn tại
+            print(f"File '{file_path}' không tồn tại.")
             return []
 
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -60,38 +61,94 @@ class QuanLyTxt(FileHandler):
                 nv.luong = float(luong)
 
                 # Nếu là nhân viên đặc biệt có thêm thông tin
-                if isinstance(nv, TiepThi) and len(parts) >= 6:
+                if isinstance(nv, TiepThi):
                     nv.doanh_so = float(parts[4])
                     nv.hoa_hong = float(parts[5])
-                elif isinstance(nv, TruongPhong) and len(parts) >= 5:
-                    nv.luong_trach_nhiem = float(parts[4])
+                elif isinstance(nv, TruongPhong):
+                    nv.luong_trach_nhiem = float(parts[6])
 
                 danh_sach.append(nv)
 
         return danh_sach
 
 
-    def write(self, file_path: str, data: list) -> None:
-        with open(file_path, 'w', encoding='utf-8') as f:
-            for nv in data:
-                chuc_vu = nv.__class__.__name__
-                base_data = [nv.ma_nv, nv.ho_ten, chuc_vu, nv.luong]
+    def write(self, file_path: str, nv_moi) -> None:
+        """
+        Ghi dữ liệu ra file với các cột cố định.
+        Mở file ở chế độ 'a' (append) để ghi thêm dữ liệu mà không làm mất dữ liệu cũ
+        """
+        # Định nghĩa tiêu đề cho các cột
+        headers = [
+            'Mã NV', 'Họ Tên', 'Chức Vụ', 'Lương', 'Doanh số', 
+            'Hoa hồng', 'Lương trách nhiệm', 'Thu Nhập', 'Thuế TN'
+        ]
+        
+        with open(file_path, 'a', newline='', encoding='utf-8') as f:
+            # Ghi dòng tiêu đề nếu file mới hoặc trống
+            if os.path.getsize(file_path) == 0:
+                f.write(','.join(headers) + '\n')
+            
+            # Chuẩn bị các giá trị mặc định cho các cột có thể trống
+            doanh_so = 0.0
+            hoa_hong = 0.0
+            luong_trach_nhiem = 0.0
 
-                if isinstance(nv, TiepThi):
-                    base_data.extend([nv.doanh_so, nv.hoa_hong])
-                elif isinstance(nv, TruongPhong):
-                    base_data.append(nv.luong_trach_nhiem)
+            chuc_vu = nv_moi.chuc_vu
 
-                f.write(','.join(map(str, base_data)) + '\n')
+            # Cập nhật giá trị riêng tùy theo loại nhân viên
+            if isinstance(nv_moi, TiepThi):
+                doanh_so = nv_moi.doanh_so
+                hoa_hong = nv_moi.hoa_hong
+            elif isinstance(nv_moi, TruongPhong):
+                luong_trach_nhiem = nv_moi.luong_trach_nhiem
+            
+            # Tạo một hàng dữ liệu theo đúng thứ tự của tiêu đề
+            row = [
+                nv_moi.ma_nv,
+                nv_moi.ho_ten,
+                chuc_vu,
+                nv_moi.luong,
+                doanh_so,
+                hoa_hong,
+                luong_trach_nhiem,
+                nv_moi.thu_nhap,
+                nv_moi.thue_thu_nhap
+            ]
+            f.write(','.join(map(str, row)) + '\n')
+
 
 class QuanLyCsv(FileHandler):
     """Xử lý việc đọc/ghi file định dạng .csv."""
     # ... code
+    def __init__(self):
+        super().__init__()
+
+    def read(self, file_path):
+        return super().read(file_path)
+    
+    def write(self, file_path, data):
+        return super().write(file_path, data)
 
 class QuanLyJson(FileHandler):
     """Xử lý việc đọc/ghi file định dạng .json."""
     # ... code
+    def __init__(self):
+        super().__init__()
+
+    def read(self, file_path):
+        return super().read(file_path)
+    
+    def write(self, file_path, data):
+        return super().write(file_path, data)
 
 class QuanLyXml(FileHandler):
     """Xử lý việc đọc/ghi file định dạng .xml."""
     # ... code
+    def __init__(self):
+        super().__init__()
+    
+    def read(self, file_path):
+        return super().read(file_path)
+    
+    def write(self, file_path, data):
+        return super().write(file_path, data)

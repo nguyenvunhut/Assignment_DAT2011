@@ -62,25 +62,39 @@ class NhanVien:
     # --- Class Methods ---
     def xuat_thong_tin(self) -> None:
         """Xuất thông tin chi tiết của nhân viên."""
-        print(f"Mã NV: {self.ma_nv}, Tên: {self.ho_ten}, Lương: {self.luong:,.0f} VNĐ")
-        print(f"  -> Thu nhập: {self.thu_nhap:,.0f} VNĐ, Thuế: {self.thue_thu_nhap:,.0f} VNĐ")
+        pass
 
 
 class HanhChinh(NhanVien):
     """Lớp mô tả nhân viên hành chính."""
     def __init__(self):
         super().__init__()
-    # Lớp này kế thừa toàn bộ thuộc tính và phương thức của NhanVien
-    # không cần thay đổi gì thêm.
+        self.__chuc_vu = "Hành Chính"
 
+    # getter cho chức vụ
+    @property
+    def chuc_vu(self) -> str:
+        return self.__chuc_vu
+
+    # --- Ghi đè (Override) Phương thức xuất thông tin ---
+    def xuat_thong_tin(self):
+        """Ghi đè phương thức xuất thông tin để thêm chức vụ."""
+        print(f"{self.ma_nv}| {self.ho_ten:<30}| {self.chuc_vu:<13}| {self.luong:<16,.0f}|"
+          f" {0.0:<16,.0f}| {0.0:<10.2f}|"
+          f" {0.0:<18,.0f}| {self.thu_nhap:<16,.0f}| {self.thue_thu_nhap:<16,.0f}")
 
 class TiepThi(NhanVien):
     """Lớp mô tả nhân viên tiếp thị."""
     def __init__(self):
         super().__init__()
+        self.__chuc_vu = "Tiếp Thị"
         self._doanh_so = 0.0
         self._hoa_hong = 0.0
-
+    
+    # getter cho chức vụ
+    @property
+    def chuc_vu(self) -> str:
+        return self.__chuc_vu
     # --- Getters for TiepThi ---
     @property
     def doanh_so(self) -> float:
@@ -116,18 +130,23 @@ class TiepThi(NhanVien):
 
     # --- Ghi đè (Override) phương thức xuat_thong_tin ---
     def xuat_thong_tin(self):
-        """Ghi đè phương thức xuất thông tin để thêm chi tiết của nhân viên tiếp thị."""
-        super().xuat_thong_tin()
-        # Hiển thị thêm doanh số và hoa hồng
-        print(f"  -> Doanh số: {self.doanh_so:,.0f} VNĐ, Hoa hồng: {self.hoa_hong*100:.2f}%")
+        """Ghi đè phương thức xuất thông tin để thêm chức vụ."""
+        print(f"{self.ma_nv}| {self.ho_ten:<30}| {self.chuc_vu:<13}| {self.luong:<16,.0f}|"
+          f" {self.doanh_so:<16,.0f}| {self.hoa_hong:<10.2f}|"
+          f" {0.0:<18,.0f}| {self.thu_nhap:<16,.0f}| {self.thue_thu_nhap:<16,.0f}")
 
 
 class TruongPhong(NhanVien):
     """Lớp mô tả trưởng phòng."""
     def __init__(self):
+        self.__chuc_vu = "Trưởng Phòng"
         super().__init__()
         self._luong_trach_nhiem = 0.0
 
+    # getter cho chức vụ
+    @property
+    def chuc_vu(self) -> str:
+        return self.__chuc_vu
     # --- Getter for TruongPhong ---
     @property
     def luong_trach_nhiem(self) -> float:
@@ -150,7 +169,8 @@ class TruongPhong(NhanVien):
 
     # --- Ghi đè (Override) phương thức xuat_thong_tin ---
     def xuat_thong_tin(self):
-        """Ghi đè phương thức xuất thông tin để thêm chi tiết của trưởng phòng."""
-        super().xuat_thong_tin()
-        # Hiển thị thêm lương trách nhiệm
-        print(f"  -> Lương trách nhiệm: {self.luong_trach_nhiem:,.0f} VNĐ")
+        """Ghi đè phương thức xuất thông tin để thêm chức vụ."""
+        print(f"{self.ma_nv}| {self.ho_ten:<30}| {self.chuc_vu:<13}| {self.luong:<16,.0f}|"
+          f" {0.0:<16,.0f}| {0.0:<10.2f}|"
+          f" {self.luong_trach_nhiem:<18,.0f}| {self.thu_nhap:<16,.0f}| {self.thue_thu_nhap:<16,.0f}")
+
