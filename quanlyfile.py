@@ -71,7 +71,7 @@ class QuanLyTxt(FileHandler):
 
         return danh_sach
 
-
+    # write method chia ra làm 2 phần, ghi dữ liệu nhân viên mới và cập nhật lại danh sách gồm (thay đổi, xóa nhân viên)
     def write(self, file_path: str, nv_moi) -> None:
         """
         Ghi dữ liệu ra file với các cột cố định.
@@ -83,38 +83,75 @@ class QuanLyTxt(FileHandler):
             'Hoa hồng', 'Lương trách nhiệm', 'Thu Nhập', 'Thuế TN'
         ]
         
-        with open(file_path, 'a', newline='', encoding='utf-8') as f:
-            # Ghi dòng tiêu đề nếu file mới hoặc trống
-            if os.path.getsize(file_path) == 0:
+        # Nếu nv_moi là một đối tượng nhân viên với thì mở file ở chế độ 'a'
+        # Nếu là một danh sách thì mở file ở chế độ 'w' để ghi đè
+        if isinstance(nv_moi, list):
+            with open(file_path, 'w', newline='', encoding='utf-8') as f:
+                # Ghi dòng tiêu đề
                 f.write(','.join(headers) + '\n')
-            
-            # Chuẩn bị các giá trị mặc định cho các cột có thể trống
-            doanh_so = 0.0
-            hoa_hong = 0.0
-            luong_trach_nhiem = 0.0
+                for nv in nv_moi:
+                    # Chuẩn bị các giá trị mặc định cho các cột có thể trống
+                    doanh_so = 0.0
+                    hoa_hong = 0.0
+                    luong_trach_nhiem = 0.0
 
-            chuc_vu = nv_moi.chuc_vu
+                    chuc_vu = nv.chuc_vu
 
-            # Cập nhật giá trị riêng tùy theo loại nhân viên
-            if isinstance(nv_moi, TiepThi):
-                doanh_so = nv_moi.doanh_so
-                hoa_hong = nv_moi.hoa_hong
-            elif isinstance(nv_moi, TruongPhong):
-                luong_trach_nhiem = nv_moi.luong_trach_nhiem
-            
-            # Tạo một hàng dữ liệu theo đúng thứ tự của tiêu đề
-            row = [
-                nv_moi.ma_nv,
-                nv_moi.ho_ten,
-                chuc_vu,
-                nv_moi.luong,
-                doanh_so,
-                hoa_hong,
-                luong_trach_nhiem,
-                nv_moi.thu_nhap,
-                nv_moi.thue_thu_nhap
-            ]
-            f.write(','.join(map(str, row)) + '\n')
+                    # Cập nhật giá trị riêng tùy theo loại nhân viên
+                    if isinstance(nv, TiepThi):
+                        doanh_so = nv.doanh_so
+                        hoa_hong = nv.hoa_hong
+                    elif isinstance(nv, TruongPhong):
+                        luong_trach_nhiem = nv.luong_trach_nhiem
+                    
+                    # Tạo một hàng dữ liệu theo đúng thứ tự của tiêu đề
+                    row = [
+                        nv.ma_nv,
+                        nv.ho_ten,
+                        chuc_vu,
+                        nv.luong,
+                        doanh_so,
+                        hoa_hong,
+                        luong_trach_nhiem,
+                        nv.thu_nhap,
+                        nv.thue_thu_nhap
+                    ]
+                    f.write(','.join(map(str, row)) + '\n')
+        elif isinstance(nv_moi, (HanhChinh, TiepThi, TruongPhong)):
+            with open(file_path, 'a', newline='', encoding='utf-8') as f:
+                # Ghi dòng tiêu đề nếu file mới hoặc trống
+                if os.path.getsize(file_path) == 0:
+                    f.write(','.join(headers) + '\n')
+                
+                # Chuẩn bị các giá trị mặc định cho các cột có thể trống
+                doanh_so = 0.0
+                hoa_hong = 0.0
+                luong_trach_nhiem = 0.0
+
+                chuc_vu = nv_moi.chuc_vu
+
+                # Cập nhật giá trị riêng tùy theo loại nhân viên
+                if isinstance(nv_moi, TiepThi):
+                    doanh_so = nv_moi.doanh_so
+                    hoa_hong = nv_moi.hoa_hong
+                elif isinstance(nv_moi, TruongPhong):
+                    luong_trach_nhiem = nv_moi.luong_trach_nhiem
+                
+                # Tạo một hàng dữ liệu theo đúng thứ tự của tiêu đề
+                row = [
+                    nv_moi.ma_nv,
+                    nv_moi.ho_ten,
+                    chuc_vu,
+                    nv_moi.luong,
+                    doanh_so,
+                    hoa_hong,
+                    luong_trach_nhiem,
+                    nv_moi.thu_nhap,
+                    nv_moi.thue_thu_nhap
+                ]
+                f.write(','.join(map(str, row)) + '\n')
+        else:
+            raise ValueError("Dữ liệu không hợp lệ. Phải là đối tượng nhân viên hoặc danh sách nhân viên.")
 
 
 class QuanLyCsv(FileHandler):
