@@ -33,16 +33,17 @@ if __name__ == "__main__":
                 case 1:
                     ql_nhansu.them_nhan_vien()
                 case 2:
-                    ql_nhansu.xuat_danh_sach()
+                    ql_nhansu.xuat_danh_sach_all()
                 case 3:
-                    ma_nv = input("Nhập mã nhân viên cần tìm: ")
+                    ma_nv = input("Nhập mã nhân viên cần tìm: ").strip()
                     nv = ql_nhansu.tim_nhan_vien_theo_ma(ma_nv)
                     if nv:
                         nv.xuat_thong_tin()
                     else:
                         print(f"Không tìm thấy nhân viên có mã {ma_nv}")
                 case 4:
-                    ql_nhansu.xoa_nhan_vien_theo_ma()
+                    ma_nv = input("Nhập mã nhân viên cần xóa: ").strip().upper()
+                    ql_nhansu.xoa_nhan_vien_theo_ma(ma_nv)
                 case 5:
                     ql_nhansu.cap_nhat_thong_tin()
                 case 6:
