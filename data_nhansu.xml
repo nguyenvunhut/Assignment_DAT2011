@@ -1,28 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
 <DANHSACH_NHANSU>
-<NHAN_VIEN>
+  <NHAN_VIEN>
     <Ma_NV>HC0001</Ma_NV>
     <Ho_Ten>Nguyễn Vũ Nhựt</Ho_Ten>
     <Chuc_Vu>Hành Chính</Chuc_Vu>
-    <Lương>9000000.0</Lương>
+    <Lương>12000000.0</Lương>
     <Doanh_số>0.0</Doanh_số>
     <Hoa_hồng>0.0</Hoa_hồng>
     <Luong_trach_nhiem>0.0</Luong_trach_nhiem>
-    <Thu_Nhập>9000000.0</Thu_Nhập>
-    <Thue_TN>900000.0</Thue_TN>
-</NHAN_VIEN>
-<NHAN_VIEN>
-    <Ma_NV>HC0002</Ma_NV>
-    <Ho_Ten>Trần Trung</Ho_Ten>
-    <Chuc_Vu>Hành Chính</Chuc_Vu>
-    <Lương>80000000.0</Lương>
-    <Doanh_số>0.0</Doanh_số>
-    <Hoa_hồng>0.0</Hoa_hồng>
-    <Luong_trach_nhiem>0.0</Luong_trach_nhiem>
-    <Thu_Nhập>80000000.0</Thu_Nhập>
-    <Thue_TN>9600000.0</Thue_TN>
-</NHAN_VIEN>
-<NHAN_VIEN>
+    <Thu_Nhập>12000000.0</Thu_Nhập>
+    <Thue_TN>1200000.0</Thue_TN>
+  </NHAN_VIEN>
+  <NHAN_VIEN>
     <Ma_NV>TT0001</Ma_NV>
     <Ho_Ten>Hồ Xuân Hương</Ho_Ten>
     <Chuc_Vu>Tiếp Thị</Chuc_Vu>
@@ -32,8 +21,8 @@
     <Luong_trach_nhiem>0.0</Luong_trach_nhiem>
     <Thu_Nhập>66500000.0</Thu_Nhập>
     <Thue_TN>7980000.0</Thue_TN>
-</NHAN_VIEN>
-<NHAN_VIEN>
+  </NHAN_VIEN>
+  <NHAN_VIEN>
     <Ma_NV>TP0001</Ma_NV>
     <Ho_Ten>Vũ Minh</Ho_Ten>
     <Chuc_Vu>Trưởng Phòng</Chuc_Vu>
@@ -43,8 +32,8 @@
     <Luong_trach_nhiem>12000000.0</Luong_trach_nhiem>
     <Thu_Nhập>22000000.0</Thu_Nhập>
     <Thue_TN>2640000.0</Thue_TN>
-</NHAN_VIEN>
-<NHAN_VIEN>
+  </NHAN_VIEN>
+  <NHAN_VIEN>
     <Ma_NV>TT0002</Ma_NV>
     <Ho_Ten>Vũ Vân Thanh</Ho_Ten>
     <Chuc_Vu>Tiếp Thị</Chuc_Vu>
@@ -54,5 +43,16 @@
     <Luong_trach_nhiem>0.0</Luong_trach_nhiem>
     <Thu_Nhập>7700000.0</Thu_Nhập>
     <Thue_TN>0</Thue_TN>
-</NHAN_VIEN>
+  </NHAN_VIEN>
+  <NHAN_VIEN>
+    <Ma_NV>HC0003</Ma_NV>
+    <Ho_Ten>Trần Trung</Ho_Ten>
+    <Chuc_Vu>Hành Chính</Chuc_Vu>
+    <Lương>12000000.0</Lương>
+    <Doanh_số>0.0</Doanh_số>
+    <Hoa_hồng>0.0</Hoa_hồng>
+    <Luong_trach_nhiem>0.0</Luong_trach_nhiem>
+    <Thu_Nhập>12000000.0</Thu_Nhập>
+    <Thue_TN>1200000.0</Thue_TN>
+  </NHAN_VIEN>
 </DANHSACH_NHANSU>
