@@ -4,6 +4,7 @@ import csv
 import json
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import data_nhansu
 from nhansu import HanhChinh, TiepThi, TruongPhong
 
 # Utility: Ánh xạ chuỗi chức vụ với Lớp tương ứng để tái tạo đối tượng
@@ -145,10 +146,46 @@ class QuanLyXml(FileHandler):
     """Xử lý việc đọc/ghi file định dạng .xml."""
     # ... code
     def __init__(self):
-        super().__init__()
-    
+        super().__init__() 
     def read(self, file_path):
+        danh_sach = []
+
+        if not os.path.exists(file_path):
+            print(f"File '{file_path}' không tồn tại.")
+            return []
+        try:
+            tree = ET.parse(file_path)
+            for nv_element in tree.findall('NHAN_VIEN'): 
+                nv_data = {}
+                for child in nv_element:
+                    tag_name = child.tag 
+                    value = child.text.strip() if child.text else ''
+                    try:
+                        nv_data[tag_name] = float(value)
+                    except ValueError:
+                        nv_data[tag_name] = value
+
+                if nv_data:
+                    danh_sach.append(nv_data)
+                
+        except ET.ParseError as e:
+            print(f"Lỗi khi phân tích file XML '{file_path}': {e}")
         return super().read(file_path)
     
     def write(self, file_path, data):
+        root = ET.Element('DANHSACH_NHANSU')      
+        for nv_moi in  data_nhansu:
+            nv_element = ET.SubElement(root, 'NHAN_VIEN')
+            
+            for key, value in nv_moi.items():
+                if value is not None and value != '':
+                    ET.SubElement(nv_element, key).text = str(value)
+                
+        tree = ET.ElementTree(root)
+        try:
+            ET.indent(tree, space="  ", level=0) 
+            tree.write(file_path, encoding='utf-8', xml_declaration=True)
+            print(f"Đã ghi thành công {len(data_nhansu)} nhân viên vào file: {file_path}")
+        except Exception as e:
+            print(f"Lỗi khi ghi file XML '{file_path}': {e}")
         return super().write(file_path, data)
