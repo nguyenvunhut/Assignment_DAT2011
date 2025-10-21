@@ -1,10 +1,9 @@
-    import os
+import os
 from abc import ABC, abstractmethod
 import csv
 import json
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
-import data_nhansu
 from nhansu import HanhChinh, TiepThi, TruongPhong
 
 # Utility: Ánh xạ chuỗi chức vụ với Lớp tương ứng để tái tạo đối tượng
