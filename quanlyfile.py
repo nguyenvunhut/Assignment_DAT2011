@@ -1,4 +1,4 @@
-import os
+    import os
 from abc import ABC, abstractmethod
 import csv
 import json
@@ -184,45 +184,123 @@ class QuanLyXml(FileHandler):
     # ... code
     def __init__(self):
         super().__init__() 
-    def read(self, file_path):
+    # def read(self, file_path):
+    #     danh_sach = []
+
+    #     if not os.path.exists(file_path):
+    #         print(f"File '{file_path}' không tồn tại.")
+    #         return []
+    #     try:
+    #         tree = ET.parse(file_path)
+    #         for nv_element in tree.findall('NHAN_VIEN'): 
+    #             nv_data = {}
+    #             for child in nv_element:
+    #                 tag_name = child.tag 
+    #                 value = child.text.strip() if child.text else ''
+    #                 try:
+    #                     nv_data[tag_name] = float(value)
+    #                 except ValueError:
+    #                     nv_data[tag_name] = value
+
+    #             if nv_data:
+    #                 danh_sach.append(nv_data)
+                
+    #     except ET.ParseError as e:
+    #         print(f"Lỗi khi phân tích file XML '{file_path}': {e}")
+    #     return super().read(file_path)
+    
+    # def write(self, file_path, data):
+    #     root = ET.Element('DANHSACH_NHANSU')      
+    #     for nv_moi in  data_nhansu:
+    #         nv_element = ET.SubElement(root, 'NHAN_VIEN')
+            
+    #         for key, value in nv_moi.items():
+    #             if value is not None and value != '':
+    #                 ET.SubElement(nv_element, key).text = str(value)
+                
+    #     tree = ET.ElementTree(root)
+    #     try:
+    #         ET.indent(tree, space="  ", level=0) 
+    #         tree.write(file_path, encoding='utf-8', xml_declaration=True)
+    #         print(f"Đã ghi thành công {len(data_nhansu)} nhân viên vào file: {file_path}")
+    #     except Exception as e:
+    #         print(f"Lỗi khi ghi file XML '{file_path}': {e}")
+    #     return super().write(file_path, data)
+    def read(self, file_path: str) -> list[HanhChinh | TiepThi | TruongPhong]:
         danh_sach = []
 
         if not os.path.exists(file_path):
             print(f"File '{file_path}' không tồn tại.")
-            return []
+            return []           
         try:
             tree = ET.parse(file_path)
-            for nv_element in tree.findall('NHAN_VIEN'): 
-                nv_data = {}
-                for child in nv_element:
-                    tag_name = child.tag 
-                    value = child.text.strip() if child.text else ''
-                    try:
-                        nv_data[tag_name] = float(value)
-                    except ValueError:
-                        nv_data[tag_name] = value
-
-                if nv_data:
-                    danh_sach.append(nv_data)
-                
+            root = tree.getroot()
         except ET.ParseError as e:
             print(f"Lỗi khi phân tích file XML '{file_path}': {e}")
-        return super().read(file_path)
-    
-    def write(self, file_path, data):
-        root = ET.Element('DANHSACH_NHANSU')      
-        for nv_moi in  data_nhansu:
+            return []            
+        for nv_element in root.findall('NHAN_VIEN'):
+            nv_data = {}
+            for child in nv_element:
+                tag_name = child.tag
+                value = child.text.strip() if child.text else ''
+                
+                # Thử chuyển đổi sang float, nếu không được thì giữ nguyên là chuỗi
+                try:
+                    nv_data[tag_name] = float(value)
+                except ValueError:
+                    nv_data[tag_name] = value
+
+            if not nv_data:
+                continue
+
+            try:
+                chuc_vu = nv_data.get("chuc_vu")
+                NhanVienClass = CLASS_MAP.get(chuc_vu)
+                
+                if not NhanVienClass:
+                    continue
+
+                # Tạo đối tượng cơ bản
+                nv = NhanVienClass(
+                    ma_nv=nv_data.get("ma_nv", ""),
+                    ho_ten=nv_data.get("ho_ten", ""),
+                    luong=nv_data.get("luong", 0.0)
+                )
+
+                # Tái tạo thuộc tính riêng biệt
+                if isinstance(nv, TiepThi):
+                    nv.doanh_so = nv_data.get("doanh_so", 0.0)
+                    nv.hoa_hong = nv_data.get("hoa_hong", 0.0)
+                elif isinstance(nv, TruongPhong):
+                    nv.luong_trach_nhiem = nv_data.get("luong_trach_nhiem", 0.0)
+                
+                danh_sach.append(nv)
+            except Exception as e:
+                print(f"Lỗi khi chuyển đổi XML element thành đối tượng Nhân sự: {e}")
+                continue
+                
+        return danh_sach
+
+    def write(self, file_path: str, data: list[HanhChinh | TiepThi | TruongPhong]) -> None:
+        """Ghi toàn bộ danh sách nhân viên ra file .xml (ghi đè)."""
+        root = ET.Element('DANHSACH_NHANSU') 
+        for nv in data:
+            nv_data = nv.to_dict() # Lấy dictionary của nhân viên
             nv_element = ET.SubElement(root, 'NHAN_VIEN')
             
-            for key, value in nv_moi.items():
+            for key, value in nv_data.items():
                 if value is not None and value != '':
                     ET.SubElement(nv_element, key).text = str(value)
-                
-        tree = ET.ElementTree(root)
+                    
+        xml_string = ET.tostring(root, encoding='utf-8')
+        pretty_xml = minidom.parseString(xml_string).toprettyxml(indent="    ")
+    
+        pretty_xml = '\n'.join(pretty_xml.split('\n')[1:])
         try:
-            ET.indent(tree, space="  ", level=0) 
-            tree.write(file_path, encoding='utf-8', xml_declaration=True)
-            print(f"Đã ghi thành công {len(data_nhansu)} nhân viên vào file: {file_path}")
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write('<?xml version="1.0" encoding="utf-8"?>\n')
+                f.write(pretty_xml)
+            print(f"Đã ghi thành công {len(data)} nhân viên vào file: {file_path}")
         except Exception as e:
             print(f"Lỗi khi ghi file XML '{file_path}': {e}")
         return super().write(file_path, data)

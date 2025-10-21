@@ -1,6 +1,4 @@
 from quanlyfile import QuanLyXml
-
-
 handler = QuanLyXml()
 data = handler.read("data_nhansu.xml")
 if not data:

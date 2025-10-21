@@ -128,7 +128,6 @@ class QuanLyNhanSu:
 
     def tim_nhan_vien_theo_ma(self, search_ma_nv: str) -> NhanVien | None:
         """Y3: Tìm nhân viên theo mã."""
-        # kiểm tra mã nhập vào có đúng định dạng không
         if self._is_valid_ma_nv(search_ma_nv) == False:
             print("Mã nhân viên không hợp lệ. Mã Phải bắt đầu bằng HC, TT, TP và theo sau là 4 chữ số.")
             return None
@@ -179,7 +178,7 @@ class QuanLyNhanSu:
                 nv.luong = new_luong
             if (new_luong_trach_nhiem := input(f"Lương trách nhiệm ({nv.luong_trach_nhiem}): ")) != "":
                 nv.luong_trach_nhiem = new_luong_trach_nhiem
-        else: # Hành chính
+        else:
             if (new_ho_ten := input(f"Họ tên ({nv.ho_ten}): ")) != "":
                 nv.ho_ten = new_ho_ten
             if (new_luong := input(f"Lương cơ bản ({nv.luong}): ")) != "":
