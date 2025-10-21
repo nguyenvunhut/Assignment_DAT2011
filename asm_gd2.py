@@ -23,7 +23,7 @@ def hien_thi_menu():
 
 if __name__ == "__main__":
     ql_nhansu = QuanLyNhanSu()
-    
+    ql_nhansu.set_file_type()
     while True:
         menu_options = hien_thi_menu()
         try:

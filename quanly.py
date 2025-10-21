@@ -21,7 +21,6 @@ class QuanLyNhanSu:
         }
         self._nv_moi = None  # Biến tạm để giữ nhân viên mới trước khi lưu
         self._danh_sach_nv = []  # Danh sách nhân viên hiện tại
-        self.doc_file() # Tải dữ liệu ban đầu khi khởi tạo
 
     # --- Phần tương tác với File Handlers ---
     def set_file_type(self):
