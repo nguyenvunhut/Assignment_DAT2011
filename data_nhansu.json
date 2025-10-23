@@ -1,0 +1,24 @@
+[
+  {
+    "ma_nv": "HC0001",
+    "ho_ten": "Nhưt",
+    "chuc_vu": "Hành Chính",
+    "luong": 6000000.0,
+    "doanh_so": 0.0,
+    "hoa_hong": 0.0,
+    "luong_trach_nhiem": 0.0,
+    "thu_nhap": 6000000.0,
+    "thue_tn": 0
+  },
+  {
+    "ma_nv": "TT0001",
+    "ho_ten": "Trung",
+    "chuc_vu": "Tiếp Thị",
+    "luong": 100000000.0,
+    "doanh_so": 34000000.0,
+    "hoa_hong": 0.2,
+    "luong_trach_nhiem": 0.0,
+    "thu_nhap": 106800000.0,
+    "thue_tn": 12816000.0
+  }
+]
