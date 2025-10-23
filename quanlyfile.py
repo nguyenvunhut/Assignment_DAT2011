@@ -362,91 +362,132 @@ class QuanLyJson(FileHandler):
 class QuanLyXml(FileHandler):
     """Xử lý việc đọc/ghi file định dạng .xml."""
 
+    def _append_nv_to_root(self, root_elem, nv):
+        """
+        Hàm trợ giúp: Tạo một nhánh <NhanVien> và thêm nó vào root.
+        Hàm này cũng thêm tất cả các thuộc tính của nhân viên làm thẻ con.
+        """
+        nv_elem = ETree.SubElement(root_elem, "NhanVien")
+        
+        # Hàm nội tuyến (inner function) để tạo thẻ con và gán text
+        def create_sub(tag, text_val):
+            sub = ETree.SubElement(nv_elem, tag)
+            sub.text = str(text_val)
+
+        # Các trường chung
+        create_sub("MaNV", nv.ma_nv)
+        create_sub("HoTen", nv.ho_ten)
+        create_sub("ChucVu", nv.chuc_vu)
+        create_sub("Luong", nv.luong)
+
+        # Lấy các trường riêng, đặt mặc định 0.0 nếu không tồn tại
+        doanh_so = 0.0
+        hoa_hong = 0.0
+        luong_trach_nhiem = 0.0
+
+        if isinstance(nv, TiepThi):
+            doanh_so = nv.doanh_so
+            hoa_hong = nv.hoa_hong
+        elif isinstance(nv, TruongPhong):
+            luong_trach_nhiem = nv.luong_trach_nhiem
+
+        # Ghi tất cả các trường để file XML đồng nhất
+        create_sub("DoanhSo", doanh_so)
+        create_sub("HoaHong", hoa_hong)
+        create_sub("LuongTrachNhiem", luong_trach_nhiem)
+        create_sub("ThuNhap", nv.thu_nhap)
+        create_sub("ThueTN", nv.thue_thu_nhap)
+
     def read(self, file_path: str) -> list:
         danh_sach = []
         if not os.path.exists(file_path):
             print(f"File '{file_path}' không tồn tại.")
-            return []
-            
+            return danh_sach
+
         try:
             tree = ETree.parse(file_path)
             root = tree.getroot()
-        except ETree.ParseError as e:
-            print(f"Lỗi khi phân tích file XML '{file_path}': {e}")
-            return []
+        except ETree.ParseError:
+            print(f"Lỗi: File XML '{file_path}' rỗng, hỏng hoặc sai định dạng.")
+            return danh_sach
         except Exception as e:
-            print(f"Lỗi không xác định khi đọc file XML '{file_path}': {e}")
-            return []
-            
-        for nv_element in root.findall('NHAN_VIEN'):
-            nv_data = {}
-            for child in nv_element:
-                tag_name = child.tag.lower().strip()
-                value = child.text.strip() if child.text else ''
-                try:
-                    nv_data[tag_name] = float(value)
-                except ValueError:
-                    nv_data[tag_name] = value
+            print(f"Lỗi không xác định khi đọc XML: {e}")
+            return danh_sach
 
-            if not nv_data:
-                continue
-
+        # Duyệt qua tất cả các thẻ <NhanVien> con của <DanhSachNhanVien>
+        for nv_elem in root.findall('NhanVien'):
             try:
-                chuc_vu = nv_data.get("chuc_vu", "")
-                NhanVienClass = CLASS_MAP.get(chuc_vu)
+                # Lấy chức vụ để xác định loại Class
+                chuc_vu_text = nv_elem.find('ChucVu').text
+                NhanVienClass = CLASS_MAP.get(chuc_vu_text)
+                
                 if not NhanVienClass:
-                    print(f"Không tìm thấy lớp cho chức vụ '{chuc_vu}'")
+                    print(f"Bỏ qua nhân viên có chức vụ không rõ: {chuc_vu_text}")
                     continue
-
+                
                 nv = NhanVienClass()
-                nv.ma_nv = nv_data.get("ma_nv", "")
-                nv.ho_ten = nv_data.get("ho_ten", "")
-                nv.luong = nv_data.get("luong", 0.0)
-                nv.doanh_so = nv_data.get("doanh_so", 0.0)
-                nv.hoa_hong = nv_data.get("hoa_hong", 0.0)
-                nv.luong_trach_nhiem = nv_data.get("luong_trach_nhiem", 0.0)
-
+                nv.ma_nv = nv_elem.find('MaNV').text
+                nv.ho_ten = nv_elem.find('HoTen').text
+                nv.luong = float(nv_elem.find('Luong').text)
+                
+                # Gán các trường riêng biệt
+                if isinstance(nv, TiepThi):
+                    nv.doanh_so = float(nv_elem.find('DoanhSo').text)
+                    nv.hoa_hong = float(nv_elem.find('HoaHong').text)
+                elif isinstance(nv, TruongPhong):
+                    nv.luong_trach_nhiem = float(nv_elem.find('LuongTrachNhiem').text)
+                
                 danh_sach.append(nv)
-            except Exception as e:
-                print(f"Lỗi khi chuyển XML thành đối tượng: {e} (Dữ liệu: {nv_data})")
+                
+            except (AttributeError, ValueError, TypeError) as e:
+                # AttributeError: nếu .find() trả về None (thiếu thẻ) rồi .text
+                # ValueError/TypeError: nếu float() thất bại
+                print(f"Bỏ qua một nhân viên trong XML do thiếu dữ liệu hoặc sai định dạng: {e}")
                 continue
                 
         return danh_sach
 
-    def write(self, file_path: str, data: Union[list[EmployeeType], EmployeeType]) -> None:
-        """Ghi toàn bộ danh sách nhân viên ra file .xml (ghi đè)."""
-        if os.path.exists(file_path) and not isinstance(data, list):
-            existing_data = self.read(file_path)
-            existing_data.append(data)
-            data = existing_data
+    def write(self, file_path: str, data) -> None:
+        root = None
         
-        employees_to_serialize = [data] if not isinstance(data, list) else data
-        
-        # Chuyển sang dictionary
-        nv_data = []
-        for nv in employees_to_serialize:
-            temp_dict = vars(nv).copy()
-            temp_dict['chuc_vu'] = nv.chuc_vu  # đảm bảo có chức vụ
-            nv_data.append(temp_dict)
-            
-        # Ghi XML
-        root = ETree.Element('DANHSACH_NHANSU') 
-        
-        for employee_dict in nv_data:
-            nv_element = ETree.SubElement(root, 'NHAN_VIEN')
-            for key, value in employee_dict.items():
-                if key in ['thu_nhap', 'thue_tn']:  # giữ nguyên các trường hợp này
-                            pass
-                        # Bỏ qua giá trị None hoặc rỗng
-                if value is not None and value != '':
-                    ETree.SubElement(nv_element, key).text = str(value)
-                                
-                xml_string = ETree.tostring(root, encoding='utf-8') 
-                pretty_xml = minidom.parseString(xml_string).toprettyxml(indent="    ")
+        if isinstance(data, list):
+            # 1. Ghi đè (Overwrite): data là một list
+            root = ETree.Element("DanhSachNhanVien")
+            for nv in data:
+                self._append_nv_to_root(root, nv)
+                
+        elif isinstance(data, (HanhChinh, TiepThi, TruongPhong)):
+            # 2. Ghi thêm (Append): data là một nhân viên
+            # Kiểm tra file tồn tại và đọc cấu trúc cũ
+            if os.path.exists(file_path):
                 try:
-                    with open(file_path, 'w', encoding='utf-8') as f:
-                        f.write('<?xml version="1.0" encoding="utf-8"?>\n')
-                        f.write(pretty_xml)
-                    print(f"Đã ghi thành công {len(nv_data)} nhân viên vào file: {file_path}")
-                except Exception as e:
-                    print(f"Lỗi khi ghi file XML '{file_path}': {e}")
+                    tree = ETree.parse(file_path)
+                    root = tree.getroot()
+                except ETree.ParseError:
+                    # File tồn tại nhưng rỗng hoặc hỏng, tạo root mới
+                    root = ETree.Element("DanhSachNhanVien")
+            else:
+                # File không tồn tại, tạo root mới
+                root = ETree.Element("DanhSachNhanVien")
+            
+            # Thêm nhân viên mới vào root
+            self._append_nv_to_root(root, data)
+            
+        else:
+            raise ValueError("Dữ liệu không hợp lệ. Phải là đối tượng nhân viên hoặc danh sách nhân viên.")
+
+        # Sử dụng minidom để 'pretty print' (format) file XML
+        try:
+            # Chuyển cây ETree thành chuỗi byte thô
+            rough_string = ETree.tostring(root, 'utf-8')
+            # Phân tích chuỗi thô bằng minidom
+            reparsed = minidom.parseString(rough_string)
+            # Tạo chuỗi byte XML đã được format (thụt lề 2 dấu cách)
+            pretty_xml_as_bytes = reparsed.toprettyxml(indent="  ", encoding="utf-8")
+            
+            # Ghi ra file ở chế độ 'wb' (write bytes)
+            with open(file_path, "wb") as f:
+                f.write(pretty_xml_as_bytes)
+                
+        except Exception as e:
+            print(f"Lỗi khi ghi file XML '{file_path}': {e}")

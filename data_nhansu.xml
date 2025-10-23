@@ -1,13 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" ?>
-<DANHSACH_NHANSU>
-    <NHAN_VIEN>
-        <_ma_nv>TT0001</_ma_nv>
-        <_ho_ten>Trân</_ho_ten>
-        <_luong>4500000.0</_luong>
-        <_TiepThi__chuc_vu>Tiếp Thị</_TiepThi__chuc_vu>
-        <_doanh_so>54000000.0</_doanh_so>
-        <_hoa_hong>0.2</_hoa_hong>
-        <chuc_vu>Tiếp Thị</chuc_vu>
-    </NHAN_VIEN>
-</DANHSACH_NHANSU>
+<DanhSachNhanVien>
+  
+  
+  
+  
+  
+  
+  <NhanVien>
+    
+    
+    
+    
+    
+    
+    <MaNV>TT0001</MaNV>
+    
+    
+    
+    
+    
+    
+    <HoTen>Phú</HoTen>
+    
+    
+    
+    
+    
+    
+    <ChucVu>Tiếp Thị</ChucVu>
+    
+    
+    
+    
+    
+    
+    <Luong>6000002.0</Luong>
+    
+    
+    
+    
+    
+    
+    <DoanhSo>400000.0</DoanhSo>
+    
+    
+    
+    
+    
+    
+    <HoaHong>0.3</HoaHong>
+    
+    
+    
+    
+    
+    
+    <LuongTrachNhiem>0.0</LuongTrachNhiem>
+    
+    
+    
+    
+    
+    
+    <ThuNhap>6120002.0</ThuNhap>
+    
+    
+    
+    
+    
+    
+    <ThueTN>0</ThueTN>
+    
+    
+    
+  
+  
+  
+  </NhanVien>
+  
+  
+  
+
+  
+  
+  <NhanVien>
+    
+    
+    
+    
+    <MaNV>TP0001</MaNV>
+    
+    
+    
+    
+    <HoTen>thùng</HoTen>
+    
+    
+    
+    
+    <ChucVu>Trưởng Phòng</ChucVu>
+    
+    
+    
+    
+    <Luong>50000000.0</Luong>
+    
+    
+    
+    
+    <DoanhSo>0.0</DoanhSo>
+    
+    
+    
+    
+    <HoaHong>0.0</HoaHong>
+    
+    
+    
+    
+    <LuongTrachNhiem>6000000.0</LuongTrachNhiem>
+    
+    
+    
+    
+    <ThuNhap>56000000.0</ThuNhap>
+    
+    
+    
+    
+    <ThueTN>6720000.0</ThueTN>
+    
+    
+  
+  
+  </NhanVien>
+  
+  
+
+  
+  <NhanVien>
+    
+    
+    <MaNV>TT0002</MaNV>
+    
+    
+    <HoTen>phúc</HoTen>
+    
+    
+    <ChucVu>Tiếp Thị</ChucVu>
+    
+    
+    <Luong>600000.0</Luong>
+    
+    
+    <DoanhSo>50000.0</DoanhSo>
+    
+    
+    <HoaHong>0.3</HoaHong>
+    
+    
+    <LuongTrachNhiem>0.0</LuongTrachNhiem>
+    
+    
+    <ThuNhap>615000.0</ThuNhap>
+    
+    
+    <ThueTN>0</ThueTN>
+    
+  
+  </NhanVien>
+  
+
+  <NhanVien>
+    <MaNV>HC0001</MaNV>
+    <HoTen>TRÚC</HoTen>
+    <ChucVu>Hành Chính</ChucVu>
+    <Luong>200000.0</Luong>
+    <DoanhSo>0.0</DoanhSo>
+    <HoaHong>0.0</HoaHong>
+    <LuongTrachNhiem>0.0</LuongTrachNhiem>
+    <ThuNhap>200000.0</ThuNhap>
+    <ThueTN>0</ThueTN>
+  </NhanVien>
+</DanhSachNhanVien>
